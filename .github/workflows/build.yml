@@ -23,12 +23,12 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          pip install flet
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install flet flet-pyinstaller
 
       - name: Build APK
-        # Usamos 'flet build apk' directamente sobre el archivo main.py
-        run: flet build apk main.py --verbose
+        # El comando 'yes' enviará una 'y' infinita para aceptar todas las descargas
+        run: |
+          yes | flet build apk main.py --verbose
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
