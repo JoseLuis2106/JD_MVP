@@ -16,20 +16,18 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Install Python
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
-      - name: Install Flet and Dependencies
+      - name: Install Dependencies
         run: |
           pip install flet
-          # Esto asegura que las herramientas de empaquetado estén listas
-          pip install flet-pyinstaller 
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
       - name: Build APK
-        # He quitado --product para evitar errores de metadatos y usado --verbose 
-        # para que si falla, nos diga EXACTAMENTE por qué.
+        # Usamos 'flet build apk' directamente sobre el archivo main.py
         run: flet build apk main.py --verbose
 
       - name: Upload APK
