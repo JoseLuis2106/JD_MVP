@@ -21,12 +21,11 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install Dependencies
-        run: |
-          pip install flet flet-pyinstaller
+      - name: Install Flet
+        run: pip install flet
 
       - name: Build APK
-        # El comando 'yes' enviará una 'y' infinita para aceptar todas las descargas
+        # El comando 'yes' es la clave para que no se quede esperando respuesta
         run: |
           yes | flet build apk main.py --verbose
 
