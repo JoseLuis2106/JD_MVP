@@ -16,20 +16,21 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Setup Python
+      - name: Install Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
-      - name: Install Flet
-        run: pip install flet
+      - name: Install Flet and Dependencies
+        run: |
+          pip install flet
+          # Esto asegura que las herramientas de empaquetado estén listas
+          pip install flet-pyinstaller 
 
       - name: Build APK
-        # Usamos --no-docker para que GitHub Actions no se líe con contenedores
-        run: flet build apk main.py --product "JustDone" --no-docker
+        # He quitado --product para evitar errores de metadatos y usado --verbose 
+        # para que si falla, nos diga EXACTAMENTE por qué.
+        run: flet build apk main.py --verbose
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
