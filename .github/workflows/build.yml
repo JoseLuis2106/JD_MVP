@@ -25,9 +25,9 @@ jobs:
         run: pip install flet
 
       - name: Build APK
-        # El comando 'yes' es la clave para que no se quede esperando respuesta
+        # Forzamos a Flet a reconocer el directorio actual como la raíz del proyecto
         run: |
-          yes | flet build apk main.py --verbose
+          yes | flet build apk main.py --module-name main --verbose
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
