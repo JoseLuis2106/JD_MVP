@@ -1,7 +1,6 @@
 name: Build Flet APK
 on: [push]
 
-# Esto fuerza a GitHub a usar la versión de Node más moderna disponible
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
@@ -10,6 +9,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -20,8 +28,8 @@ jobs:
         run: pip install flet
 
       - name: Build APK
-        # He añadido --release para que el APK sea instalable directamente
-        run: flet build apk main.py --product "JustDone"
+        # Usamos --no-docker para que GitHub Actions no se líe con contenedores
+        run: flet build apk main.py --product "JustDone" --no-docker
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
