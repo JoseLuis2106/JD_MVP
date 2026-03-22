@@ -5,7 +5,51 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
+  build:name: Build Flet APK
+on: [push]
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
   build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Flet
+        run: pip install flet
+
+      - name: Prepare App Directory
+        run: |
+          # Creamos una carpeta limpia para la App
+          mkdir my_flet_app
+          # Movemos el código y los requisitos dentro
+          cp main.py my_flet_app/
+          if [ -f requirements.txt ]; then cp requirements.txt my_flet_app/; fi
+
+      - name: Build APK
+        # Ahora compilamos LA CARPETA, no el archivo suelto
+        run: |
+          yes | flet build apk my_flet_app --verbose
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release
+          # Flet guardará el APK en la subcarpeta build de la nueva carpeta
+          path: my_flet_app/build/apk/*.apk
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
